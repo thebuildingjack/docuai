@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  clerkId   String     @unique
+  email     String     @unique
+  documents Document[]
+  createdAt DateTime   @default(now())
+}
+
+model Document {
+  id        String    @id @default(cuid())
+  name      String
+  summary   String?   @db.Text
+  keyPoints String?   @db.Text
+  rawText   String    @db.Text
+  fileSize  Int
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  messages  Message[]
+  createdAt DateTime  @default(now())
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  role       Role
+  content    String   @db.Text
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ASSISTANT
+}

@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npx prisma generate && npx prisma migrate deploy && next build",
+  "installCommand": "npm install",
+  "functions": {
+    "app/api/**": {
+      "maxDuration": 60
+    }
+  }
+}
